@@ -1284,6 +1284,11 @@ void squish_mario_model(struct MarioState *m) {
 
             vec3f_set(m->marioObj->header.gfx.scale, 1.4f, 0.4f, 1.4f);
         }
+        if (configNewOptions.paper_mode) {
+            m->marioObj->header.gfx.scale[0] *= 1.0625f;
+            m->marioObj->header.gfx.scale[1] *= 1.0625f;
+            m->marioObj->header.gfx.scale[2] *= 0.03125f;
+        }
     }
 }
 

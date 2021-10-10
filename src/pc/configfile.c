@@ -49,7 +49,11 @@ ConfigWindow configWindow       = {
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
+    .paper_mode = false,
     .settings_changed = false,
+};
+ConfigNewOptions configNewOptions   = {
+    .paper_mode = false,
 };
 unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, (TODO) 2=three-point
 unsigned int configMasterVolume = 30; // 0 - MAX_VOLUME
@@ -114,6 +118,7 @@ unsigned int config60Fps                         = 1;
 unsigned int configDrawDistance                  = 5;
 
 static const struct ConfigOption options[] = {
+    {.name = "paper_mode",           .type = CONFIG_TYPE_BOOL, .boolValue = &configNewOptions.paper_mode},
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
     {.name = "window_x",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
     {.name = "window_y",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},

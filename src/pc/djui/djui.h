@@ -49,6 +49,7 @@
 #include "djui_panel_sound.h"
 #include "djui_panel_confirm.h"
 #include "djui_panel_cheats.h"
+#include "djui_panel_newoptions.h"
 
 extern struct DjuiRoot* gDjuiRoot;
 extern bool gDjuiInMainMenu;

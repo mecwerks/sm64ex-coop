@@ -17,10 +17,16 @@ typedef struct {
     bool vsync;
     bool reset;
     bool fullscreen;
+    bool paper_mode;
     bool exiting_fullscreen;
     bool settings_changed;
 } ConfigWindow;
 
+typedef struct {
+    bool paper_mode;
+} ConfigNewOptions;
+
+extern ConfigNewOptions configNewOptions;
 extern ConfigWindow configWindow;
 extern unsigned int configFiltering;
 extern unsigned int configMasterVolume;

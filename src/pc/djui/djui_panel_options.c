@@ -48,11 +48,16 @@ void djui_panel_options_create(struct DjuiBase* caller) {
         djui_base_set_size(&button5->base, 1.0f, 64);
         djui_interactable_hook_click(&button5->base, djui_panel_sound_create);
 
-        struct DjuiButton* button6 = djui_button_create(&body->base, "Back");
+        struct DjuiButton* button6 = djui_button_create(&body->base, "New Options");
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button6->base, 1.0f, 64);
-        djui_button_set_style(button6, 1);
-        djui_interactable_hook_click(&button6->base, djui_panel_options_back);
+        djui_interactable_hook_click(&button6->base, djui_panel_newoptions_create);
+
+        struct DjuiButton* button7 = djui_button_create(&body->base, "Back");
+        djui_base_set_size_type(&button7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button7->base, 1.0f, 64);
+        djui_button_set_style(button7, 1);
+        djui_interactable_hook_click(&button7->base, djui_panel_options_back);
     }
 
     djui_panel_add(caller, &panel->base, defaultBase);
