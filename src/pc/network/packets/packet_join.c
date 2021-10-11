@@ -158,11 +158,11 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
     packet_read(p, &gServerSettings.shareLives, sizeof(u8));
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
-    packet_read(&p, &gServerSettings.enableWallslide, sizeof(u8));
-    packet_read(&p, &gServerSettings.enableGroundpoundJump, sizeof(u8));
-    packet_read(&p, &gServerSettings.enableSunshineDive, sizeof(u8));
-    packet_read(&p, &gServerSettings.enableOdysseyDive, sizeof(u8));
-    packet_read(&p, &gServerSettings.enableFlashbackPound, sizeof(u8));
+    packet_read(p, &gServerSettings.enableWallslide, sizeof(u8));
+    packet_read(p, &gServerSettings.enableGroundpoundJump, sizeof(u8));
+    packet_read(p, &gServerSettings.enableSunshineDive, sizeof(u8));
+    packet_read(p, &gServerSettings.enableOdysseyDive, sizeof(u8));
+    packet_read(p, &gServerSettings.enableFlashbackPound, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
 
