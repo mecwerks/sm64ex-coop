@@ -28,6 +28,12 @@ void djui_panel_host_moveset_create(struct DjuiBase* caller) {
         checkbox(&body->base, "Enemy Bouncing", &configMoveset.enemyBouncing)
         checkbox(&body->base, "Full Air Control", &configMoveset.fullAirControl)
         checkbox(&body->base, "Disable Backwards Long-Jump", &configMoveset.disableBLJ)
+
+        struct DjuiButton* button1 = djui_button_create(&body->base, "Back");
+        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button1->base, 1.0f, 64);
+        djui_button_set_style(button1, 1);
+        djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, &panel->base, defaultBase);
