@@ -61,9 +61,9 @@ static f32 get_buoyancy(struct MarioState *m) {
             buoyancy = -18.0f;
         }
     } else if (swimming_near_surface(m)) {
-        buoyancy = 1.25f;
+        buoyancy = gServerSettings.improvedSwimming ? 2.0f : 1.25f;
     } else if (!(m->action & ACT_FLAG_MOVING)) {
-        buoyancy = -2.0f;
+        buoyancy = gServerSettings.improvedSwimming ? -0.5f : -2.0f;
     }
 
     return buoyancy;
@@ -447,7 +447,10 @@ static void common_swimming_step(struct MarioState *m, s16 swimStrength) {
         case WATER_STEP_HIT_FLOOR:
             floorPitch = -find_floor_slope(m, -0x8000);
             if (m->faceAngle[0] < floorPitch) {
-                m->faceAngle[0] = floorPitch;
+                if (gServerSettings.improvedSwimming)
+                    m->faceAngle[0] = approach_s32(m->faceAngle[0], floorPitch, 0x400, 0x400);
+                else
+                    m->faceAngle[0] = floorPitch;
             }
             break;
 
@@ -495,7 +498,7 @@ static s32 check_water_jump(struct MarioState *m) {
         if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
             vec3s_set(m->angleVel, 0, 0, 0);
 
-            m->vel[1] = 62.0f;
+            m->vel[1] = gServerSettings.improvedSwimming ? 64.0f : 62.0f;
 
             if (m->heldObj == NULL) {
                 return set_mario_action(m, ACT_WATER_JUMP, 0);
@@ -530,11 +533,11 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer < 6) {
-        m->forwardVel += 0.5f;
+        m->forwardVel += gServerSettings.improvedSwimming ? 1.0f : 0.5f;
     }
 
     if (m->actionTimer >= 9) {
-        m->forwardVel += 1.5f;
+        m->forwardVel += gServerSettings.improvedSwimming ? 3.0f : 1.5f;
     }
 
     if (m->actionTimer >= 2) {

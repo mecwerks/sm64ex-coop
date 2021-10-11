@@ -867,8 +867,10 @@ s32 act_air_throw(struct MarioState *m) {
 }
 
 s32 act_water_jump(struct MarioState *m) {
-    if (m->forwardVel < 15.0f) {
-        mario_set_forward_vel(m, 15.0f);
+    f32 forwardVel = gServerSettings.improvedSwimming ? 25.0f : 15.0f;
+
+    if (m->forwardVel < forwardVel) {
+        mario_set_forward_vel(m, forwardVel);
     }
 
     play_mario_sound(m, SOUND_ACTION_UNKNOWN432, 0);
@@ -881,7 +883,7 @@ s32 act_water_jump(struct MarioState *m) {
             break;
 
         case AIR_STEP_HIT_WALL:
-            mario_set_forward_vel(m, 15.0f);
+            mario_set_forward_vel(m, forwardVel);
             break;
 
         case AIR_STEP_GRABBED_LEDGE:
@@ -901,12 +903,13 @@ s32 act_water_jump(struct MarioState *m) {
 }
 
 s32 act_hold_water_jump(struct MarioState *m) {
+    f32 forwardVel = gServerSettings.improvedSwimming ? 22.0f : 15.0f;
     if (m->marioObj->oInteractStatus & INT_STATUS_MARIO_DROP_OBJECT) {
         return drop_and_set_mario_action(m, ACT_FREEFALL, 0);
     }
 
-    if (m->forwardVel < 15.0f) {
-        mario_set_forward_vel(m, 15.0f);
+    if (m->forwardVel < forwardVel) {
+        mario_set_forward_vel(m, forwardVel);
     }
 
     play_mario_sound(m, SOUND_ACTION_UNKNOWN432, 0);
@@ -919,7 +922,7 @@ s32 act_hold_water_jump(struct MarioState *m) {
             break;
 
         case AIR_STEP_HIT_WALL:
-            mario_set_forward_vel(m, 15.0f);
+            mario_set_forward_vel(m, forwardVel);
             break;
 
         case AIR_STEP_HIT_LAVA_WALL:
