@@ -1904,6 +1904,11 @@ s32 act_long_jump_land(struct MarioState *m) {
     }
 #endif
 
+    // Sorry daddy...
+    if (gServerSettings.disableBLJ && m->forwardVel < 0.0f) {
+        m->forwardVel = 0.0f;
+    }
+
     if (!(m->input & INPUT_Z_DOWN)) {
         m->input &= ~INPUT_A_PRESSED;
     }
