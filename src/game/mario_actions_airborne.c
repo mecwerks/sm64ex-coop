@@ -108,7 +108,15 @@ s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
 
 s32 check_kick_or_dive_in_air(struct MarioState *m) {
     if (m->input & INPUT_B_PRESSED) {
-        return set_mario_action(m, m->forwardVel > 28.0f ? ACT_DIVE : ACT_JUMP_KICK, 0);
+        if (gServerSettings.improvedMovement) {
+            if (m->forwardVel >= 28.0f && m->controller->stickMag > 48.0f) {
+                return set_mario_action(m, ACT_DIVE, 1);
+            }
+            return set_mario_action(m, ACT_JUMP_KICK, 0);
+        }
+        else {
+            return set_mario_action(m, m->forwardVel > 28.0f ? ACT_DIVE : ACT_JUMP_KICK, 0);
+        }
     }
     return FALSE;
 }
@@ -196,8 +204,20 @@ void update_air_with_turn(struct MarioState *m) {
             intendedDYaw = m->intendedYaw - m->faceAngle[1];
             intendedMag = m->intendedMag / 32.0f;
 
-            m->forwardVel += 1.5f * coss(intendedDYaw) * intendedMag;
-            m->faceAngle[1] += 512.0f * sins(intendedDYaw) * intendedMag;
+            if (gServerSettings.improvedMovement) {
+                if ((m->forwardVel > 0 && intendedMag * coss(intendedDYaw) > 0) || (m->forwardVel < 0 && intendedMag * coss(intendedDYaw) < 0)) {
+                    if (m->action != ACT_WALL_KICK_AIR)
+                        m->forwardVel += intendedMag * coss(intendedDYaw) * 1.5f;
+                }
+                else {
+                    m->forwardVel += intendedMag * coss(intendedDYaw) * 3.5f;
+                }
+                m->faceAngle[1] += 1024.0f * sins(intendedDYaw) * intendedMag;
+            }
+            else {
+                m->forwardVel += 1.5f * coss(intendedDYaw) * intendedMag;
+                m->faceAngle[1] += 512.0f * sins(intendedDYaw) * intendedMag;
+            }
         }
 
         //! Uncapped air speed. Net positive when moving forward.
@@ -213,7 +233,7 @@ void update_air_with_turn(struct MarioState *m) {
     }
 }
 
-void update_air_without_turn(struct MarioState *m) {
+void update_air_without_turn(struct MarioState *m, u32 canTurn) {
     f32 sidewaysSpeed = 0.0f;
     f32 dragThreshold;
     s16 intendedDYaw;
@@ -227,8 +247,38 @@ void update_air_without_turn(struct MarioState *m) {
             intendedDYaw = m->intendedYaw - m->faceAngle[1];
             intendedMag = m->intendedMag / 32.0f;
 
-            m->forwardVel += intendedMag * coss(intendedDYaw) * 1.5f;
-            sidewaysSpeed = intendedMag * sins(intendedDYaw) * 10.0f;
+            if (gServerSettings.improvedMovement) {
+                if ((m->forwardVel > 0 && intendedMag * coss(intendedDYaw) > 0) || (m->forwardVel < 0 && intendedMag * coss(intendedDYaw) < 0)) {
+                    if (m->action != ACT_WALL_KICK_AIR)
+                        m->forwardVel += intendedMag * coss(intendedDYaw) * 1.5f;
+                }
+                else {
+                    m->forwardVel += intendedMag * coss(intendedDYaw) * 3.5f;
+                }
+                if (gServerSettings.fullAirControl && canTurn) {
+                    sidewaysSpeed = intendedMag * sins(intendedDYaw) * 7.5f;
+                    m->faceAngle[1] += 768.0f * sins(intendedDYaw) * intendedMag;
+                }
+                else if (canTurn) {
+                    sidewaysSpeed = intendedMag * sins(intendedDYaw) * 15.0f;
+                    m->faceAngle[1] += 320.0f * sins(intendedDYaw) * intendedMag;
+                }
+                else {
+                    sidewaysSpeed = intendedMag * sins(intendedDYaw) * 15.0f;
+                    m->faceAngle[1] += 64.0f * sins(intendedDYaw) * intendedMag;
+                }
+                
+            }
+            else {
+                m->forwardVel += intendedMag * coss(intendedDYaw) * 1.5f;
+                if (gServerSettings.fullAirControl && canTurn) {
+                    sidewaysSpeed = intendedMag * sins(intendedDYaw) * 5.0f;
+                    m->faceAngle[1] += 768.0f * sins(intendedDYaw) * intendedMag;
+                }
+                else {
+                    sidewaysSpeed = intendedMag * sins(intendedDYaw) * 10.0f;
+                }
+            }
         }
 
         //! Uncapped air speed. Net positive when moving forward.
@@ -371,7 +421,7 @@ void update_flying(struct MarioState *m) {
 u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg) {
     u32 stepResult;
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     stepResult = perform_air_step(m, stepArg);
     if (m->action == ACT_BUBBLED && stepResult == AIR_STEP_HIT_LAVA_WALL) {
@@ -655,7 +705,7 @@ s32 act_riding_shell_air(struct MarioState *m) {
     play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
     set_mario_animation(m, MARIO_ANIM_JUMP_RIDING_SHELL);
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -735,7 +785,7 @@ s32 act_dive(struct MarioState *m) {
         }
     }
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 0);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_NONE:
@@ -795,7 +845,7 @@ s32 act_air_throw(struct MarioState *m) {
 
     play_character_sound_if_no_flag(m, CHAR_SOUND_WAH2, MARIO_MARIO_SOUND_PLAYED);
     set_mario_animation(m, MARIO_ANIM_THROW_LIGHT_OBJECT);
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -913,6 +963,7 @@ s32 act_steep_jump(struct MarioState *m) {
 s32 act_ground_pound(struct MarioState *m) {
     u32 stepResult;
     f32 yOffset;
+    u8 lagTime;
 
     play_sound_if_no_flag(m, SOUND_ACTION_THROW, MARIO_ACTION_SOUND_PLAYED);
 
@@ -924,9 +975,17 @@ s32 act_ground_pound(struct MarioState *m) {
                 m->peakHeight = m->pos[1];
                 vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
             }
+            if (gServerSettings.improvedMovement) {
+                m->vel[1] = -24.0f;
+            }
+        }
+        else if (gServerSettings.improvedMovement) {
+            m->vel[1] = -54.0f;
         }
 
-        m->vel[1] = -50.0f;
+        if (!gServerSettings.improvedMovement) {
+            m->vel[1] = -50.0f;
+        }
         mario_set_forward_vel(m, 0.0f);
 
         set_mario_animation(m, m->actionArg == 0 ? MARIO_ANIM_START_GROUND_POUND
@@ -936,7 +995,13 @@ s32 act_ground_pound(struct MarioState *m) {
         }
 
         m->actionTimer++;
-        if (m->actionTimer >= m->marioObj->header.gfx.unk38.curAnim->unk08 + 4) {
+        if (gServerSettings.improvedMovement) {
+            lagTime = 2;
+        }
+        else {
+            lagTime = 4;
+        }
+        if (m->actionTimer >= m->marioObj->header.gfx.unk38.curAnim->unk08 + lagTime) {
             play_character_sound(m, CHAR_SOUND_GROUND_POUND_WAH);
             m->actionState = 1;
         }
@@ -1071,7 +1136,7 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
     play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
     set_mario_animation(m, MARIO_ANIM_DIVE);
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 0);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -1420,7 +1485,7 @@ s32 act_forward_rollout(struct MarioState *m) {
     if (!gServerSettings.enableFlashbackPound)
         play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 0);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_NONE:
@@ -1462,7 +1527,7 @@ s32 act_backward_rollout(struct MarioState *m) {
     if (!gServerSettings.enableFlashbackPound)
         play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 0);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_NONE:
@@ -1650,7 +1715,7 @@ s32 act_slide_kick(struct MarioState *m) {
         return set_mario_action(m, ACT_FREEFALL, 2);
     }
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 0);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_NONE:
@@ -1709,7 +1774,7 @@ s32 act_jump_kick(struct MarioState *m) {
         m->flags |= MARIO_KICKING;
     }
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -2112,7 +2177,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
     }
 #endif
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -2158,7 +2223,7 @@ s32 act_vertical_wind(struct MarioState *m) {
         set_mario_animation(m, MARIO_ANIM_AIRBORNE_ON_STOMACH);
     }
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
@@ -2186,7 +2251,7 @@ s32 act_special_triple_jump(struct MarioState *m) {
 
     play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, CHAR_SOUND_YAHOO);
 
-    update_air_without_turn(m);
+    update_air_without_turn(m, 1);
 
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:

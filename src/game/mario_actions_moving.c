@@ -469,6 +469,14 @@ void update_walking_speed(struct MarioState *m) {
     if (Cheats.Responsive == true && Cheats.EnableCheats == true ) {
         m->faceAngle[1] = m->intendedYaw;
     }
+    else if (gServerSettings.improvedMovement) {
+
+        if (m->forwardVel < -8.0f) {
+            m->forwardVel = -8.0f;
+        }
+        
+        m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x1000, 0x1000);
+    }
     else {
          m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
     }
@@ -815,8 +823,20 @@ s32 act_walking(struct MarioState *m) {
         return begin_braking_action(m);
     }
 
-    if (analog_stick_held_back(m) && m->forwardVel >= 16.0f) {
-        return set_mario_action(m, ACT_TURNING_AROUND, 0);
+    if (gServerSettings.improvedMovement) {
+        if (analog_stick_held_back(m)) {
+            if (m->forwardVel >= 12.0f){
+                return set_mario_action(m, ACT_TURNING_AROUND, 0);
+            } else if ((m->forwardVel) < 10.0f && (m->forwardVel > 0.0f)){
+                m->faceAngle[1] = m->intendedYaw;
+                return set_mario_action(m, ACT_TURNING_AROUND, 0);
+            }
+        }
+    }
+    else {
+        if (analog_stick_held_back(m) && m->forwardVel >= 16.0f) {
+            return set_mario_action(m, ACT_TURNING_AROUND, 0);
+        }
     }
 
     if (m->input & INPUT_Z_PRESSED) {
@@ -1056,7 +1076,8 @@ s32 act_braking(struct MarioState *m) {
         return check_common_action_exits(m);
     }
 
-    if (apply_slope_decel(m, 2.0f)) {
+
+    if (apply_slope_decel(m, gServerSettings.improvedMovement ? 2.5f : 2.0f)) {
         return set_mario_action(m, ACT_BRAKING_STOP, 0);
     }
 
@@ -1142,6 +1163,9 @@ s32 act_decelerating(struct MarioState *m) {
         set_mario_anim_with_accel(m, MARIO_ANIM_WALKING, val0C);
         play_step_sound(m, 10, 49);
     }
+
+    if (gServerSettings.improvedMovement)
+        check_ledge_climb_down(m);
 
     return FALSE;
 }
@@ -1336,8 +1360,9 @@ s32 act_burning_ground(struct MarioState *m) {
     m->forwardVel = approach_f32(m->forwardVel, 32.0f, 4.0f, 1.0f);
 
     if (m->input & INPUT_NONZERO_ANALOG) {
+        s32 limit = gServerSettings.improvedMovement ? 0x800 : 0x600;
         m->faceAngle[1] =
-            m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x600, 0x600);
+            m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, limit, limit);
     }
 
     apply_slope_accel(m);

@@ -97,6 +97,12 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.enableSunshineDive, sizeof(u8));
     packet_write(&p, &gServerSettings.enableOdysseyDive, sizeof(u8));
     packet_write(&p, &gServerSettings.enableFlashbackPound, sizeof(u8));
+    packet_write(&p, &gServerSettings.improvedMovement, sizeof(u8));
+    packet_write(&p, &gServerSettings.improvedSwimming, sizeof(u8));
+    packet_write(&p, &gServerSettings.improvedHanging, sizeof(u8));
+    packet_write(&p, &gServerSettings.enemyBouncing, sizeof(u8));
+    packet_write(&p, &gServerSettings.fullAirControl, sizeof(u8));
+    packet_write(&p, &gServerSettings.disableBLJ, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     u8 modCount = string_linked_list_count(&gRegisteredMods);
@@ -163,6 +169,12 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.enableSunshineDive, sizeof(u8));
     packet_read(p, &gServerSettings.enableOdysseyDive, sizeof(u8));
     packet_read(p, &gServerSettings.enableFlashbackPound, sizeof(u8));
+    packet_read(p, &gServerSettings.improvedMovement, sizeof(u8));
+    packet_read(p, &gServerSettings.improvedSwimming, sizeof(u8));
+    packet_read(p, &gServerSettings.improvedHanging, sizeof(u8));
+    packet_read(p, &gServerSettings.enemyBouncing, sizeof(u8));
+    packet_read(p, &gServerSettings.fullAirControl, sizeof(u8));
+    packet_read(p, &gServerSettings.disableBLJ, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
 

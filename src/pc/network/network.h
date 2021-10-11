@@ -93,6 +93,12 @@ struct ServerSettings {
     u8 enableSunshineDive;
     u8 enableOdysseyDive;
     u8 enableFlashbackPound;
+    u8 improvedMovement;
+    u8 improvedSwimming;
+    u8 improvedHanging;
+    u8 enemyBouncing;
+    u8 fullAirControl;
+    u8 disableBLJ;
 };
 
 // Networking-specific externs

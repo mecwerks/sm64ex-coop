@@ -47,6 +47,12 @@ struct ServerSettings gServerSettings = {
     .enableSunshineDive = 1,
     .enableOdysseyDive = 1,
     .enableFlashbackPound = 1,
+    .improvedMovement = 1,
+    .improvedSwimming = 1,
+    .improvedHanging = 1,
+    .enemyBouncing = 1,
+    .fullAirControl = 1,
+    .disableBLJ = 1,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -78,6 +84,11 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.enableSunshineDive = configMoveset.sunshine_dive;
     gServerSettings.enableOdysseyDive = configMoveset.odyssey_dive;
     gServerSettings.enableFlashbackPound = configMoveset.flashback_pound;
+    gServerSettings.improvedMovement = configMoveset.improvedMovement;
+    gServerSettings.improvedSwimming = configMoveset.improvedSwimming;
+    gServerSettings.improvedHanging = configMoveset.improvedHanging;
+    gServerSettings.enemyBouncing = configMoveset.enemyBouncing;
+    gServerSettings.disableBLJ = configMoveset.disableBLJ;
     Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system

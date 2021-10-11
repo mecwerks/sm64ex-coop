@@ -61,6 +61,12 @@ ConfigMoveset configMoveset = {
     .sunshine_dive = true,
     .odyssey_dive = true,
     .flashback_pound = true,
+    .improvedMovement = true,
+    .improvedSwimming = true,
+    .improvedHanging = true,
+    .enemyBouncing = true,
+    .fullAirControl = true,
+    .disableBLJ = true,
 };
 unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, (TODO) 2=three-point
 unsigned int configMasterVolume = 30; // 0 - MAX_VOLUME
@@ -192,10 +198,16 @@ static const struct ConfigOption options[] = {
     {.name = "paper_mode",           .type = CONFIG_TYPE_BOOL, .boolValue = &configNewOptions.paper_mode},
     // Moveset
     {.name = "wallslide",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.wallslide},
-    {.name = "ground_pound_jump",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.ground_pound_jump},
-    {.name = "sunshine_dive",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.sunshine_dive},
-    {.name = "odyssey_dive",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.odyssey_dive},
-    {.name = "flashback_pound",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.flashback_pound},
+    {.name = "ground_pound_jump",   .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.ground_pound_jump},
+    {.name = "sunshine_dive",       .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.sunshine_dive},
+    {.name = "odyssey_dive",        .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.odyssey_dive},
+    {.name = "flashback_pound",     .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.flashback_pound},
+    {.name = "improvedMovement",    .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.improvedMovement},
+    {.name = "improvedSwimming",    .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.improvedSwimming},
+    {.name = "improvedHanging",     .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.improvedHanging},
+    {.name = "enemyBouncing",       .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.enemyBouncing},
+    {.name = "fullAirControl",      .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.fullAirControl},
+    {.name = "disableBLJ",          .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.disableBLJ},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

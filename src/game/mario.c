@@ -829,7 +829,7 @@ static void set_mario_y_vel_based_on_fspeed(struct MarioState *m, f32 initialVel
  * Transitions for a variety of airborne actions.
  */
 static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
-    f32 fowardVel;
+    f32 fowardVel, vel1;
 
     if (m->squishTimer != 0 || m->quicksandDepth >= 1.0f) {
         if (action == ACT_DOUBLE_JUMP || action == ACT_TWIRLING) {
@@ -882,6 +882,13 @@ static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actio
             break;
 
         case ACT_WALL_KICK_AIR:
+            fowardVel = gServerSettings.improvedMovement ? 28.0f : 24.0f;
+            set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.0f);
+            if (m->forwardVel < fowardVel) {
+                m->forwardVel = fowardVel;
+            }
+            m->wallKickTimer = 0;
+            break;
         case ACT_TOP_OF_POLE_JUMP:
             set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.0f);
             if (m->forwardVel < 24.0f) {
@@ -929,9 +936,12 @@ static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actio
             break;
 
         case ACT_SLIDE_KICK:
-            m->vel[1] = 12.0f;
-            if (m->forwardVel < 32.0f) {
-                m->forwardVel = 32.0f;
+            vel1 = gServerSettings.improvedMovement ? 14.0f : 12.0f;
+            fowardVel = gServerSettings.improvedMovement ? 36.0f : 32.0f;
+
+            m->vel[1] = vel1;
+            if (m->forwardVel < fowardVel) {
+                m->forwardVel = fowardVel;
             }
             break;
 

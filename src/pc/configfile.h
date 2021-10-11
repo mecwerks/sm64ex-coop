@@ -32,6 +32,12 @@ typedef struct {
     bool sunshine_dive;
     bool odyssey_dive;
     bool flashback_pound;
+    bool improvedMovement;
+    bool improvedSwimming;
+    bool improvedHanging;
+    bool enemyBouncing;
+    bool fullAirControl;
+    bool disableBLJ;
 } ConfigMoveset;
 
 extern ConfigMoveset configMoveset;
