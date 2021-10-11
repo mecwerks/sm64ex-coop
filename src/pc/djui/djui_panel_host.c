@@ -152,25 +152,11 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox4->base, 1.0f, 32);
 
-        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Enable Wallslide", &configMoveset.wallslide);
-        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox5->base, 1.0f, 32);
-
-        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Enable Groundpound Jump", &configMoveset.ground_pound_jump);
-        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox6->base, 1.0f, 32);
-
-        struct DjuiCheckbox* checkbox7 = djui_checkbox_create(&body->base, "Enable Sunshine Dive", &configMoveset.sunshine_dive);
-        djui_base_set_size_type(&checkbox7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox7->base, 1.0f, 32);
-
-        struct DjuiCheckbox* checkbox8 = djui_checkbox_create(&body->base, "Enable Odyssey Dive", &configMoveset.odyssey_dive);
-        djui_base_set_size_type(&checkbox8->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox8->base, 1.0f, 32);
-
-        struct DjuiCheckbox* checkbox9 = djui_checkbox_create(&body->base, "Enable Flashback Pound", &configMoveset.flashback_pound);
-        djui_base_set_size_type(&checkbox9->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox9->base, 1.0f, 32);
+        struct DjuiButton* button5 = djui_button_create(&body->base, "Moveset Settings");
+        djui_base_set_size_type(&button5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button5->base, 1.0f, 64);
+        djui_button_set_style(button5, 1);
+        djui_interactable_hook_click(&button5->base, djui_panel_host_moveset_create);
 
         struct DjuiRect* rect3 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

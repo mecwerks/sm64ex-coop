@@ -10,7 +10,7 @@ void djui_panel_newoptions_create(struct DjuiBase* caller) {
     f32 bodyHeight = 32 * 7 + 64 * 1 + 16 * 6;
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\D\\#1be700\\I\\#00b3ff\\S\\#ffef00\\P\\#ff0800\\L\\#1be700\\A\\#00b3ff\\Y");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\O\\#1be700\\P\\#00b3ff\\T\\#ffef00\\I\\#ff0800\\O\\#1be700\\N\\#00b3ff\\S");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
 
     {
