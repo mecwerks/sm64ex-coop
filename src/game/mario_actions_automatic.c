@@ -361,6 +361,10 @@ s32 update_hang_moving(struct MarioState *m) {
     Vec3f nextPos;
     f32 maxSpeed = 4.0f;
 
+    if (gServerSettings.improvedHanging) {
+        maxSpeed = 8.0f;
+    }
+
     m->forwardVel += 1.0f;
     if (m->forwardVel > maxSpeed) {
         m->forwardVel = maxSpeed;
@@ -407,7 +411,8 @@ s32 act_start_hanging(struct MarioState *m) {
         return set_mario_action(m, ACT_HANGING, 0);
     }
 
-    if (!(m->input & INPUT_A_DOWN)) {
+    if ((!(m->input & INPUT_A_DOWN) && !gServerSettings.improvedHanging)
+    || ((m->input & INPUT_A_PRESSED) && gServerSettings.improvedHanging)) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
@@ -435,7 +440,8 @@ s32 act_hanging(struct MarioState *m) {
         return set_mario_action(m, ACT_HANG_MOVING, m->actionArg);
     }
 
-    if (!(m->input & INPUT_A_DOWN)) {
+    if ((!(m->input & INPUT_A_DOWN) && !gServerSettings.improvedHanging)
+    || ((m->input & INPUT_A_PRESSED) && gServerSettings.improvedHanging)) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
@@ -459,7 +465,8 @@ s32 act_hanging(struct MarioState *m) {
 }
 
 s32 act_hang_moving(struct MarioState *m) {
-    if (!(m->input & INPUT_A_DOWN)) {
+    if ((!(m->input & INPUT_A_DOWN) && !gServerSettings.improvedHanging)
+    || ((m->input & INPUT_A_PRESSED) && gServerSettings.improvedHanging)) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
@@ -489,8 +496,12 @@ s32 act_hang_moving(struct MarioState *m) {
         }
     }
 
-    if (update_hang_moving(m) == HANG_LEFT_CEIL) {
-        set_mario_action(m, ACT_FREEFALL, 0);
+    if (gServerSettings.improvedHanging)  
+        update_hang_moving(m);
+    else {
+        if (update_hang_moving(m) == HANG_LEFT_CEIL) {
+            set_mario_action(m, ACT_FREEFALL, 0);
+        }
     }
 
     return FALSE;

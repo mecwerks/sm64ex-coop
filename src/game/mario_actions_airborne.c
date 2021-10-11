@@ -2072,7 +2072,9 @@ s32 act_riding_hoot(struct MarioState *m) {
 
     if (m->usedObj == NULL) { return FALSE; }
 
-    if (!(m->input & INPUT_A_DOWN) || (m->marioObj->oInteractStatus & INT_STATUS_MARIO_UNK7)) {
+    if (((!(m->input & INPUT_A_DOWN) && !gServerSettings.improvedHanging) 
+        || ((m->input & INPUT_A_PRESSED) && gServerSettings.improvedHanging)) 
+            || (m->marioObj->oInteractStatus & INT_STATUS_MARIO_UNK7)) {
         m->usedObj->oInteractStatus = 0;
         m->usedObj->oHootMarioReleaseTime = gGlobalTimer;
 
