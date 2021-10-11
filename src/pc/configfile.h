@@ -26,6 +26,15 @@ typedef struct {
     bool paper_mode;
 } ConfigNewOptions;
 
+typedef struct {
+    bool wallslide;
+    bool ground_pound_jump;
+    bool sunshine_dive;
+    bool odyssey_dive;
+    bool flashback_pound;
+} ConfigMoveset;
+
+extern ConfigMoveset configMoveset;
 extern ConfigNewOptions configNewOptions;
 extern ConfigWindow configWindow;
 extern unsigned int configFiltering;

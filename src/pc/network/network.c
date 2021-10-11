@@ -42,6 +42,11 @@ struct ServerSettings gServerSettings = {
     .skipIntro = 0,
     .shareLives = 0,
     .enableCheats = 0,
+    .enableWallslide = 1,
+    .enableGroundpoundJump = 1,
+    .enableSunshineDive = 1,
+    .enableOdysseyDive = 1,
+    .enableFlashbackPound = 1,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -68,6 +73,11 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.skipIntro = configSkipIntro;
     gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
+    gServerSettings.enableWallslide = configMoveset.wallslide;
+    gServerSettings.enableGroundpoundJump = configMoveset.ground_pound_jump;
+    gServerSettings.enableSunshineDive = configMoveset.sunshine_dive;
+    gServerSettings.enableOdysseyDive = configMoveset.odyssey_dive;
+    gServerSettings.enableFlashbackPound = configMoveset.flashback_pound;
     Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system

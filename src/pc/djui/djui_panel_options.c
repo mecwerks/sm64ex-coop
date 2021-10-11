@@ -8,7 +8,7 @@ void djui_panel_options_back(struct DjuiBase* caller) {
 }
 
 void djui_panel_options_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 64 * 5 + 16 * 4;
+    f32 bodyHeight = 64 * 6 + 16 * 5;
     if (gNetworkType == NT_NONE) {
         bodyHeight += 64 + 16;
     }

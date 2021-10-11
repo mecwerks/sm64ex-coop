@@ -88,6 +88,11 @@ struct ServerSettings {
     u8 skipIntro;
     u8 shareLives;
     u8 enableCheats;
+    u8 enableWallslide;
+    u8 enableGroundpoundJump;
+    u8 enableSunshineDive;
+    u8 enableOdysseyDive;
+    u8 enableFlashbackPound;
 };
 
 // Networking-specific externs

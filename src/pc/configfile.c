@@ -55,6 +55,13 @@ ConfigWindow configWindow       = {
 ConfigNewOptions configNewOptions   = {
     .paper_mode = false,
 };
+ConfigMoveset configMoveset = {
+    .wallslide = true,
+    .ground_pound_jump = true,
+    .sunshine_dive = true,
+    .odyssey_dive = true,
+    .flashback_pound = true,
+};
 unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, (TODO) 2=three-point
 unsigned int configMasterVolume = 30; // 0 - MAX_VOLUME
 unsigned int configMusicVolume = MAX_VOLUME;
@@ -118,7 +125,6 @@ unsigned int config60Fps                         = 1;
 unsigned int configDrawDistance                  = 5;
 
 static const struct ConfigOption options[] = {
-    {.name = "paper_mode",           .type = CONFIG_TYPE_BOOL, .boolValue = &configNewOptions.paper_mode},
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
     {.name = "window_x",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
     {.name = "window_y",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},
@@ -182,6 +188,14 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
     {.name = "coop_60fps",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &config60Fps},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
+    // New stuff
+    {.name = "paper_mode",           .type = CONFIG_TYPE_BOOL, .boolValue = &configNewOptions.paper_mode},
+    // Moveset
+    {.name = "wallslide",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.wallslide},
+    {.name = "ground_pound_jump",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.ground_pound_jump},
+    {.name = "sunshine_dive",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.sunshine_dive},
+    {.name = "odyssey_dive",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.odyssey_dive},
+    {.name = "flashback_pound",           .type = CONFIG_TYPE_BOOL, .boolValue = &configMoveset.flashback_pound},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

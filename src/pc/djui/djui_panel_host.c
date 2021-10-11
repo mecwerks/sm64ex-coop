@@ -60,9 +60,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
-    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 9;
+    f32 bodyHeight = 32 * 12 + 64 * 2 + 16 * 14;
 #else
-    f32 bodyHeight = 32 * 6 + 64 * 2 + 16 * 8;
+    f32 bodyHeight = 32 * 11 + 64 * 2 + 16 * 13;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -151,6 +151,26 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Enable cheats", &configEnableCheats);
         djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox4->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Enable Wallslide", &configMoveset.wallslide);
+        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox5->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Enable Groundpound Jump", &configMoveset.ground_pound_jump);
+        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox6->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox7 = djui_checkbox_create(&body->base, "Enable Sunshine Dive", &configMoveset.sunshine_dive);
+        djui_base_set_size_type(&checkbox7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox7->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox8 = djui_checkbox_create(&body->base, "Enable Odyssey Dive", &configMoveset.odyssey_dive);
+        djui_base_set_size_type(&checkbox8->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox8->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox9 = djui_checkbox_create(&body->base, "Enable Flashback Pound", &configMoveset.flashback_pound);
+        djui_base_set_size_type(&checkbox9->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox9->base, 1.0f, 32);
 
         struct DjuiRect* rect3 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

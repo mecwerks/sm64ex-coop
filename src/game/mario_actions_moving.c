@@ -1504,6 +1504,8 @@ s32 act_crouch_slide(struct MarioState *m) {
 s32 act_slide_kick_slide(struct MarioState *m) {
     if (m->input & INPUT_A_PRESSED) {
         queue_rumble_data_mario(m, 5, 80);
+        if (gServerSettings.enableFlashbackPound)
+            play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
         return set_jumping_action(m, ACT_FORWARD_ROLLOUT, 0);
     }
 
@@ -1534,6 +1536,8 @@ s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s3
     if (m->actionTimer == 5) {
         if (!(m->input & INPUT_ABOVE_SLIDE) && (m->input & (INPUT_A_PRESSED | INPUT_B_PRESSED))) {
             queue_rumble_data_mario(m, 5, 80);
+            if (gServerSettings.enableFlashbackPound)
+                play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
             return drop_and_set_mario_action(
                 m, m->forwardVel >= 0.0f ? ACT_FORWARD_ROLLOUT : ACT_BACKWARD_ROLLOUT, 0);
         }
@@ -1571,8 +1575,17 @@ s32 act_hold_stomach_slide(struct MarioState *m) {
 s32 act_dive_slide(struct MarioState *m) {
     if (!(m->input & INPUT_ABOVE_SLIDE) && (m->input & (INPUT_A_PRESSED | INPUT_B_PRESSED))) {
         queue_rumble_data_mario(m, 5, 80);
-        return set_mario_action(m, m->forwardVel > 0.0f ? ACT_FORWARD_ROLLOUT : ACT_BACKWARD_ROLLOUT,
-                                0);
+        if (gServerSettings.enableSunshineDive && m->input & INPUT_B_PRESSED) {
+            mario_set_forward_vel(m, 20.0f);
+            m->vel[1] = 21.0f;
+            return set_mario_action(m, ACT_DIVE, 0);
+        }
+        else {
+            if (gServerSettings.enableFlashbackPound)
+                play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
+            return set_mario_action(m, m->forwardVel > 0.0f ? ACT_FORWARD_ROLLOUT : ACT_BACKWARD_ROLLOUT,
+                                    0);
+        }
     }
 
     play_mario_landing_sound_once(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
