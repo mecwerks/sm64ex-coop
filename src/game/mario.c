@@ -1384,6 +1384,10 @@ void update_mario_joystick_inputs(struct MarioState *m) {
         m->intendedMag = mag / 8.0f;
     }
 
+    if (m->controller->buttonDown & X_BUTTON) {
+        m->intendedMag *= 0.25f;
+    }
+
     // don't update remote inputs past this point
     if ((sCurrPlayMode == PLAY_MODE_PAUSED) || m->playerIndex != 0) { return; }
 
